@@ -1,0 +1,30 @@
+{
+	"name": "gemboot",
+	"version": "1.0.0",
+	"description": "Gem Boot JS Core",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gem-partij/gemboot.git"
+	},
+	"keywords": [
+		"gemboot"
+	],
+	"author": "Angger Priyardhan Putro",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/gem-partij/gemboot/issues"
+	},
+	"homepage": "https://github.com/gem-partij/gemboot#readme",
+	"dependencies": {
+		"debug": "^4.1.1",
+		"dotenv": "^8.0.0",
+		"knex": "^0.16.5",
+		"mysql": "^2.17.1",
+		"mysql2": "^1.6.5",
+		"sequelize": "^5.8.6"
+	}
+}
