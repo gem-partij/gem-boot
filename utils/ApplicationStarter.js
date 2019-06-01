@@ -4,7 +4,7 @@ class ApplicationStarter {
 	init() {
 		this.startupDebug = require("debug")("app:startup");
 		this.express = require("express");
-		this.app = express();
+		this.app = this.express();
 	}
 
 	constructor(router, plugins) {
@@ -43,7 +43,7 @@ class ApplicationStarter {
 			const bodyParser = require("body-parser");
 			this.app.use(bodyParser.json());
 			this.app.use(bodyParser.urlencoded({ extended: true }));
-			startupDebug("BodyParser Enabled.");
+			this.startupDebug("BodyParser Enabled.");
 		}
 
 		this.app.use(this.router);
