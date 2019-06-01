@@ -8,11 +8,8 @@ class Model {
 		this._attributes = {};
 
 		this._protected = ["created_at", "updated_at"];
-		this._unprotected = ["id", "created_at", "updated_at"]
-			.concat(Object.keys(this._attributes))
-			.filter(attr => {
-				return !this._protected.includes(attr);
-			});
+
+		this._unprotected = this.generateUnprotectedAttributes();
 	}
 
 	constructor() {
@@ -66,6 +63,14 @@ class Model {
 			deletedAt: false
 		});
 		return ORM;
+	}
+
+	generateUnprotectedAttributes() {
+		return [this.primaryKey, "created_at", "updated_at"]
+			.concat(Object.keys(this.attributes))
+			.filter(attr => {
+				return !this.protectedAttributes.includes(attr);
+			});
 	}
 }
 
