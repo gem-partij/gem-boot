@@ -23,7 +23,7 @@ class CrudRepository extends Repository {
 				limit: 30,
 				offset: 0,
 				order: [["id", "DESC"]],
-				attributes: this.model.unprotected()
+				attributes: this.model.unprotectedAttributes
 			};
 		}
 		return this.orm.findAll(options);
@@ -32,7 +32,7 @@ class CrudRepository extends Repository {
 	getOne(id) {
 		console.log(this.orm.attributes);
 		return this.orm.findByPk(id, {
-			attributes: this.model.unprotected()
+			attributes: this.model.unprotectedAttributes
 		});
 	}
 
@@ -52,7 +52,7 @@ class CrudRepository extends Repository {
 	}
 
 	delete(id) {
-		const pk = this.model.primaryKey();
+		const pk = this.model.primaryKey;
 		return this.orm.destroy({
 			where: {
 				[pk]: id
