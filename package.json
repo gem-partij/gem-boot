@@ -1,6 +1,6 @@
 {
 	"name": "gemboot",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Gem Boot JS Core",
 	"main": "index.js",
 	"scripts": {
