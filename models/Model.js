@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const db = require.main.require("./utils/database").sequelize;
+const db = require("../utils/database").sequelize;
 
 class Model {
 	init() {

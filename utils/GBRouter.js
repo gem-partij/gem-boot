@@ -6,10 +6,7 @@ class GBRouter {
 	crud(path, middleware, controllerPath) {
 		const Controller = require(controllerPath);
 
-		if (
-			Object.getPrototypeOf(Controller.constructor).name !==
-			"CrudController"
-		) {
+		if (Object.getPrototypeOf(Controller).name !== "CrudController") {
 			throw new Error("Controller must extends gemboot.CrudController");
 		}
 

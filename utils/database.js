@@ -24,6 +24,6 @@ sequelize
 	});
 
 module.exports = {
-	knex: require("knex")(require.main.require("./knexfile")),
+	knex: require("knex")(require("../knexfile")),
 	sequelize
 };

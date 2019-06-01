@@ -13,7 +13,7 @@ class Repository {
 	}
 
 	set model(model) {
-		if (Object.getPrototypeOf(model).name !== "Model") {
+		if (Object.getPrototypeOf(model.constructor).name !== "Model") {
 			throw new Error("Model must extends gemboot.Model");
 		}
 		this._model = model;
