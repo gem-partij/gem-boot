@@ -1,6 +1,8 @@
 "use strict";
 
 module.exports = {
+	Application: require("./utils/ApplicationStarter"),
+
 	// Controllers
 	Controller: require("./controllers/Controller"),
 	CrudController: require("./controllers/CrudController"),
