@@ -6,6 +6,12 @@ class GBRouter {
 	}
 
 	crud(path, middleware, controllerPath) {
+		// check class to make sure the controller given to this method are extends from gemboot CrudController
+		const Controller = require(controllerPath);
+		if (Object.getPrototypeOf(Controller).name !== "CrudController") {
+			throw new Error("Controller must extends gemboot.CrudController");
+		}
+
 		// GET /
 		this.get(path + "/", middleware, controllerPath, "index");
 
@@ -48,11 +54,6 @@ class GBRouter {
 
 	[_forward](controllerPath, methodName, req, res) {
 		const Controller = require(controllerPath);
-
-		if (Object.getPrototypeOf(Controller).name !== "CrudController") {
-			throw new Error("Controller must extends gemboot.CrudController");
-		}
-
 		new Controller()[methodName](req, res);
 	}
 }
