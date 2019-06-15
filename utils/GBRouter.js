@@ -5,6 +5,10 @@ class GBRouter {
 		this.router = router;
 	}
 
+	next(req, res, next) {
+		next();
+	}
+
 	crud(path, middleware, controllerPath) {
 		// check class to make sure the controller given to this method are extends from gemboot CrudController
 		const Controller = require(controllerPath);
@@ -29,24 +33,36 @@ class GBRouter {
 	}
 
 	get(path, middleware, controllerPath, methodName) {
+		if (!middleware) {
+			middleware = this.next;
+		}
 		this.router.get(path, middleware, (req, res) => {
 			this[_forward](controllerPath, methodName, req, res);
 		});
 	}
 
 	post(path, middleware, controllerPath, methodName) {
+		if (!middleware) {
+			middleware = this.next;
+		}
 		this.router.post(path, middleware, (req, res) => {
 			this[_forward](controllerPath, methodName, req, res);
 		});
 	}
 
 	patch(path, middleware, controllerPath, methodName) {
+		if (!middleware) {
+			middleware = this.next;
+		}
 		this.router.patch(path, middleware, (req, res) => {
 			this[_forward](controllerPath, methodName, req, res);
 		});
 	}
 
 	delete(path, middleware, controllerPath, methodName) {
+		if (!middleware) {
+			middleware = this.next;
+		}
 		this.router.delete(path, middleware, (req, res) => {
 			this[_forward](controllerPath, methodName, req, res);
 		});
