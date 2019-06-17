@@ -1,5 +1,9 @@
+require("dotenv").config();
+
 const Sequelize = require("sequelize");
-const db = require("../utils/database").sequelize;
+const mongoose = require("mongoose");
+
+const conn = require("../utils/database").connection;
 
 class Model {
 	init() {
@@ -56,13 +60,29 @@ class Model {
 		return this._unprotected;
 	}
 
-	get ORM() {
-		const ORM = db.define(this.table, this.attributes, {
+	get queryBuilder() {
+		if (process.env.DB_TYPE == "mongodb") {
+			return this.ODM();
+		} else {
+			return this.ORM();
+		}
+	}
+
+	// For SQL (MySQL, Postgre, etc)
+	ORM() {
+		const ORM = conn.define(this.table, this.attributes, {
 			createdAt: "created_at",
 			updatedAt: "updated_at",
 			deletedAt: false
 		});
 		return ORM;
+	}
+
+	// For NoSQL (MongoDB, etx)
+	ODM() {
+		const schema = new mongoose.Schema(this.attributes);
+		const ODM = mongoose.model(this.table, schema);
+		return ODM;
 	}
 
 	generateUnprotectedAttributes() {

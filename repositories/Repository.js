@@ -1,15 +1,22 @@
+require("dotenv").config();
+
 class Repository {
 	init() {
 		this._model = null;
-		this._orm = null;
+		this._query = null;
 	}
 
-	constructor() {
+	constructor(Model = null) {
 		if (new.target === Repository) {
 			throw new TypeError("Cannot construct Abstract instances directly");
 		}
+		if (!Model) {
+			throw new Error("Model cannot be empty");
+		}
 
 		this.init();
+		this.model = new Model();
+		this[this.model.constructor.name] = this.query;
 	}
 
 	set model(model) {
@@ -17,19 +24,23 @@ class Repository {
 			throw new Error("Model must extends gemboot.Model");
 		}
 		this._model = model;
-		this.orm = model.ORM;
+		this._query = model.queryBuilder;
 	}
 
 	get model() {
 		return this._model;
 	}
 
-	set orm(orm) {
-		this._orm = orm;
+	get query() {
+		return this._query;
 	}
 
-	get orm() {
-		return this._orm;
+	get dbType() {
+		return process.env.DB_TYPE;
+	}
+
+	get isRelational() {
+		return process.env.DB_TYPE == "mongodb" ? false : true;
 	}
 }
 
