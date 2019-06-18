@@ -1,14 +1,13 @@
 require("dotenv").config();
 
 const Sequelize = require("sequelize");
-const mongoose = require("mongoose");
-
-const conn = require("../utils/database").connection;
 
 class Model {
 	init() {
 		this._table = "tablename";
-		this._primaryKey = "id";
+
+		this._primaryKey = !this.isRelational ? "_id" : "id";
+
 		this._attributes = {};
 
 		this._protected = ["created_at", "updated_at"];
@@ -60,17 +59,30 @@ class Model {
 		return this._unprotected;
 	}
 
+	get dbType() {
+		return process.env.DB_TYPE;
+	}
+
+	get isRelational() {
+		return process.env.DB_TYPE == "mongodb" ? false : true;
+	}
+
 	get queryBuilder() {
-		if (process.env.DB_TYPE == "mongodb") {
+		if (!this.isRelational) {
 			return this.ODM();
 		} else {
 			return this.ORM();
 		}
 	}
 
+	get connection() {
+		const conn = require("../utils/database").connection;
+		return conn;
+	}
+
 	// For SQL (MySQL, Postgre, etc)
 	ORM() {
-		const ORM = conn.define(this.table, this.attributes, {
+		const ORM = this.connection.define(this.table, this.attributes, {
 			createdAt: "created_at",
 			updatedAt: "updated_at",
 			deletedAt: false
@@ -80,9 +92,18 @@ class Model {
 
 	// For NoSQL (MongoDB, etx)
 	ODM() {
+		const mongoose = require("mongoose");
 		const schema = new mongoose.Schema(this.attributes);
-		const ODM = mongoose.model(this.table, schema);
-		return ODM;
+
+		const modelExists = this.connection.modelNames().find(el => {
+			return el == this.table;
+		});
+
+		if (modelExists) {
+			return this.connection.model(this.table);
+		} else {
+			return this.connection.model(this.table, schema);
+		}
 	}
 
 	generateUnprotectedAttributes() {

@@ -1,36 +1,49 @@
 require("dotenv").config();
 
 const debug = require("debug")("app:db");
+const isRelational = process.env.DB_TYPE != "mongodb";
+
+const getMigrations = () => {
+	return !isRelational ? null : require("knex")(require("../knexfile"));
+};
 
 const getConnection = () => {
-	if (process.env.DB_TYPE == "mongodb") {
+	if (!isRelational) {
 		const mongoose = require("mongoose");
 
-		mongoose.connect(
-			"mongodb://" +
-				process.env.DB_USER +
-				":" +
-				process.env.DB_PASS +
-				"@" +
-				process.env.DB_HOST +
-				":" +
-				process.env.DB_PORT +
-				"/" +
-				process.env.DB_NAME +
-				"",
-			{
-				useNewUrlParser: true
+		if (mongoose.connection.readyState) {
+			return mongoose.connection;
+		} else {
+			let uri =
+				"mongodb://" + process.env.DB_HOST + "/" + process.env.DB_NAME;
+			if (process.env.DB_USER && process.env.DB_PASS) {
+				uri =
+					"mongodb://" +
+					process.env.DB_USER +
+					":" +
+					process.env.DB_PASS +
+					"@" +
+					process.env.DB_HOST +
+					":" +
+					process.env.DB_PORT +
+					"/" +
+					process.env.DB_NAME +
+					"";
 			}
-		);
 
-		const conn = mongoose.connection;
+			const conn = mongoose.createConnection(uri, {
+				useNewUrlParser: true
+			});
 
-		conn.on("error", console.error.bind(console, "connection error:"));
-		conn.once("open", () => {
-			debug("Connection to MongoDB has been established successfully.");
-		});
+			conn.on("error", console.error.bind(console, "connection error:"));
+			conn.once("open", () => {
+				debug(
+					"Connection to MongoDB has been established successfully."
+				);
+			});
 
-		return conn;
+			return conn;
+		}
 	} else {
 		const Sequelize = require("sequelize");
 
@@ -61,6 +74,6 @@ const getConnection = () => {
 };
 
 module.exports = {
-	knex: require("knex")(require("../knexfile")),
+	knex: getMigrations(),
 	connection: getConnection()
 };

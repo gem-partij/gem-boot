@@ -1,8 +1,8 @@
 const Controller = require("./Controller");
 
 class CrudController extends Controller {
-	constructor() {
-		super();
+	constructor(Repository = null) {
+		super(Repository);
 
 		if (new.target === CrudController) {
 			throw new TypeError("Cannot construct Abstract instances directly");

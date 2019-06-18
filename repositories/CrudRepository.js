@@ -15,6 +15,10 @@ class CrudRepository extends Repository {
 				throw new TypeError("Must override " + mustOverride[i]);
 			}
 		}
+
+		if (this.model) {
+			this.PK = this.model.primaryKey;
+		}
 	}
 
 	getAll(options = null) {
@@ -23,13 +27,19 @@ class CrudRepository extends Repository {
 				options = {
 					limit: 30,
 					offset: 0,
-					order: [["id", "DESC"]],
+					order: [[this.PK, "DESC"]],
 					attributes: this.model.unprotectedAttributes
 				};
 			}
 			return this.query.findAll(options);
 		} else {
-			return this.query.find().exec();
+			if (options === null) {
+				options = {
+					limit: 30,
+					sort: { [this.PK]: -1 }
+				};
+			}
+			return this.query.find({}, null, options).exec();
 		}
 	}
 
@@ -39,14 +49,12 @@ class CrudRepository extends Repository {
 				attributes: this.model.unprotectedAttributes
 			});
 		} else {
+			return this.query.findById(id).exec();
 		}
 	}
 
 	insert(data) {
-		if (this.isRelational) {
-			return this.query.create(data);
-		} else {
-		}
+		return this.query.create(data);
 	}
 
 	update(data, id) {
@@ -60,18 +68,23 @@ class CrudRepository extends Repository {
 			}
 			return row.save();
 		} else {
+			return this.query.findOneAndUpdate({ [this.PK]: id }, data).exec();
 		}
 	}
 
 	delete(id) {
 		if (this.isRelational) {
-			const pk = this.model.primaryKey;
+			// const pk = this.model.primaryKey;
 			return this.query.destroy({
 				where: {
-					[pk]: id
+					[this.PK]: id
 				}
 			});
 		} else {
+			return this.query
+				.findById(id)
+				.remove()
+				.exec();
 		}
 	}
 }

@@ -3,12 +3,14 @@ class Controller {
 		this._repo = null;
 	}
 
-	constructor() {
+	constructor(Repository = null) {
 		if (new.target === Controller) {
 			throw new TypeError("Cannot construct Abstract instances directly");
 		}
 
 		this.init();
+		this.repo = new Repository();
+		this[this.repo.constructor.name] = this.repo;
 	}
 
 	set repo(repo) {

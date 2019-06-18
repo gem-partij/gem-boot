@@ -1,7 +1,8 @@
 require("dotenv").config();
 
 class Repository {
-	init() {
+	init(Model = null) {
+		this._modelClass = Model;
 		this._model = null;
 		this._query = null;
 	}
@@ -14,9 +15,8 @@ class Repository {
 			throw new Error("Model cannot be empty");
 		}
 
-		this.init();
+		this.init(Model);
 		this.model = new Model();
-		this[this.model.constructor.name] = this.query;
 	}
 
 	set model(model) {
@@ -25,6 +25,7 @@ class Repository {
 		}
 		this._model = model;
 		this._query = model.queryBuilder;
+		this[this._model.constructor.name] = this._query;
 	}
 
 	get model() {
@@ -35,12 +36,24 @@ class Repository {
 		return this._query;
 	}
 
+	get newModel() {
+		this.model.connection.close();
+		// this._model = null;
+
+		this.model = new this._modelClass();
+		return this.model;
+	}
+
+	get newQuery() {
+		return this.newModel.queryBuilder;
+	}
+
 	get dbType() {
-		return process.env.DB_TYPE;
+		return this.model.dbType;
 	}
 
 	get isRelational() {
-		return process.env.DB_TYPE == "mongodb" ? false : true;
+		return this.model.isRelational;
 	}
 }
 
