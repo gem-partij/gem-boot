@@ -6,15 +6,33 @@ class ConnectionManager {
 		if (!config) {
 			config = dbConfig;
 		}
-		this._defaultConnectionName = config.default;
-		this._connectionConfig =
-			config.connections[this._defaultConnectionName];
+		this.databaseConfig = config;
 
-		this._connection = null;
+		this.defaultConnectionName = this.databaseConfig.default;
+		this.connection = null;
+	}
+
+	set databaseConfig(databaseConfig) {
+		this._databaseConfig = databaseConfig;
+	}
+
+	get databaseConfig() {
+		return this._databaseConfig;
+	}
+
+	set defaultConnectionName(defaultConnectionName) {
+		this._defaultConnectionName = defaultConnectionName;
+		this._connectionConfig = this._databaseConfig.connections[
+			this._defaultConnectionName
+		];
 	}
 
 	get defaultConnectionName() {
 		return this._defaultConnectionName;
+	}
+
+	set connectionConfig(connectionConfig) {
+		this._connectionConfig = connectionConfig;
 	}
 
 	get connectionConfig() {

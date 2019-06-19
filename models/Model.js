@@ -67,6 +67,15 @@ class Model {
 		return this._unprotected;
 	}
 
+	set connectionName(connectionName) {
+		this._connectionName = connectionName;
+		this.connectionManager.defaultConnectionName = connectionName;
+	}
+
+	get connectionName() {
+		return this._connectionName;
+	}
+
 	set connectionManager(manager) {
 		this._connectionManager = manager;
 	}
