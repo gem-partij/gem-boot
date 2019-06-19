@@ -1,11 +1,11 @@
-require("dotenv").config();
+const env = require("./utils/env");
 
 module.exports = {
-	client: process.env.DB_TYPE,
+	client: env("DB_DRIVER", "mysql"),
 	connection: {
-		host: process.env.DB_HOST,
-		user: process.env.DB_USER,
-		password: process.env.DB_PASS,
-		database: process.env.DB_NAME
+		host: env("DB_HOST", "127.0.0.1"),
+		user: env("DB_USER", "root"),
+		password: env("DB_PASS", ""),
+		database: env("DB_NAME", "test")
 	}
 };

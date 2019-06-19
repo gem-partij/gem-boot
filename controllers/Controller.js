@@ -9,8 +9,10 @@ class Controller {
 		}
 
 		this.init();
-		this.repo = new Repository();
-		this[this.repo.constructor.name] = this.repo;
+		if (Repository) {
+			this.repo = new Repository();
+			this[this.repo.constructor.name] = this.repo;
+		}
 	}
 
 	set repo(repo) {

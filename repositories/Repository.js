@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 class Repository {
 	init(Model = null) {
 		this._modelClass = Model;

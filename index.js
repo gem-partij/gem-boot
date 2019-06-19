@@ -17,6 +17,7 @@ module.exports = {
 	// Utils
 	database: require("./utils/database"),
 	GBRouter: require("./utils/GBRouter"),
+	env: require("./utils/env"),
 
 	// config
 	knexfile: require("./knexfile")

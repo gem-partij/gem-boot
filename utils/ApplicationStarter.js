@@ -1,4 +1,4 @@
-require("dotenv").config();
+const env = require("./env");
 
 class ApplicationStarter {
 	init() {
@@ -7,17 +7,27 @@ class ApplicationStarter {
 		this.app = this.express();
 	}
 
-	constructor(router, plugins) {
+	constructor(router, plugins, gembootConfigPath = null) {
 		this.router = router;
 		this.plugins = plugins;
+
+		if (!gembootConfigPath) {
+			gembootConfigPath = process.cwd() + "/config";
+		}
+		this.gembootConfigPath = gembootConfigPath;
+
 		this.init();
 	}
 
 	start() {
+		if (this.gembootConfigPath) {
+			process.env.GEMBOOT_CONFIG_PATH = this.gembootConfigPath;
+		}
+
 		if (this.plugins.morgan.enable === true) {
 			if (
-				process.env.APP_ENV == "local" ||
-				process.env.APP_DEBUG == true
+				env("APP_ENV").toUpperCase() == "LOCAL" ||
+				env("APP_DEBUG") == true
 			) {
 				const morgan = require("morgan");
 				this.app.use(morgan("tiny"));
@@ -49,9 +59,9 @@ class ApplicationStarter {
 		this.app.use(this.router);
 		this.startupDebug("Router Registered.");
 
-		this.startupDebug("APP_ENV: " + process.env.APP_ENV);
-		const port = process.env.APP_PORT;
-		console.log(process.env.APP_NAME + " run on localhost:" + port);
+		this.startupDebug("APP_ENV: " + env("APP_ENV"));
+		const port = env("APP_PORT");
+		console.log(env("APP_NAME") + " run on localhost:" + port);
 
 		this.app.listen(port);
 	}

@@ -1,9 +1,17 @@
-require("dotenv").config();
-
-const Sequelize = require("sequelize");
+const env = require("../utils/env");
+const dbUtil = require("../utils/database");
+const ConnectionManager = dbUtil.getConnectionManager();
 
 class Model {
 	init() {
+		this._connectionManager = new ConnectionManager(
+			process.env.GEMBOOT_CONFIG_PATH
+				? require(process.env.GEMBOOT_CONFIG_PATH + "/database")
+				: null
+		);
+		this._connectionName = this.connectionManager.defaultConnectionName;
+		this._connection = null;
+
 		this._table = "tablename";
 
 		this._primaryKey = !this.isRelational ? "_id" : "id";
@@ -59,12 +67,27 @@ class Model {
 		return this._unprotected;
 	}
 
-	get dbType() {
-		return process.env.DB_TYPE;
+	set connectionManager(manager) {
+		this._connectionManager = manager;
+	}
+
+	get connectionManager() {
+		return this._connectionManager;
+	}
+
+	set connection(conn) {
+		this._connection = conn;
+	}
+
+	get connection() {
+		if (!this._connection) {
+			this._connection = this.connectionManager.connect();
+		}
+		return this._connection;
 	}
 
 	get isRelational() {
-		return process.env.DB_TYPE == "mongodb" ? false : true;
+		return this.connectionManager.driver.isRelational();
 	}
 
 	get queryBuilder() {
@@ -73,11 +96,6 @@ class Model {
 		} else {
 			return this.ORM();
 		}
-	}
-
-	get connection() {
-		const conn = require("../utils/database").connection;
-		return conn;
 	}
 
 	// For SQL (MySQL, Postgre, etc)
