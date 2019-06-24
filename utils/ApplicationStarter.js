@@ -37,6 +37,21 @@ class ApplicationStarter {
 			}
 		}
 
+		if (this.plugins["rate-limiter"].enable === true) {
+			const rateLimit = require("express-rate-limit");
+
+			// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+			// see https://expressjs.com/en/guide/behind-proxies.html
+			// app.set('trust proxy', 1);
+
+			const limiter = rateLimit(this.plugins["rate-limiter"].config);
+
+			//  apply to all requests
+			this.app.use(limiter);
+
+			this.startupDebug("Rate Limiter Enabled.");
+		}
+
 		if (this.plugins.helmet.enable === true) {
 			const helmet = require("helmet");
 			this.app.use(helmet());

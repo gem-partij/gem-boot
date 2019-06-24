@@ -1,6 +1,6 @@
 {
 	"name": "gemboot",
-	"version": "1.2.4",
+	"version": "1.2.5",
 	"description": "Gem Boot JS Core",
 	"main": "index.js",
 	"scripts": {
@@ -25,6 +25,7 @@
 		"debug": "^4.1.1",
 		"dotenv": "^8.0.0",
 		"express": "^4.17.0",
+		"express-rate-limit": "^5.0.0",
 		"helmet": "^3.18.0",
 		"knex": "^0.16.5",
 		"mongoose": "^5.6.0",
