@@ -1,4 +1,6 @@
 const env = require("./env");
+const path = require("path");
+const pluginMorgan = require("../plugins/morgan");
 
 class ApplicationStarter {
 	init() {
@@ -12,7 +14,7 @@ class ApplicationStarter {
 		this.plugins = plugins;
 
 		if (!gembootConfigPath) {
-			gembootConfigPath = process.cwd() + "/config";
+			gembootConfigPath = path.join(process.cwd(), "config");
 		}
 		this.gembootConfigPath = gembootConfigPath;
 
@@ -29,8 +31,10 @@ class ApplicationStarter {
 				env("APP_ENV").toUpperCase() == "LOCAL" ||
 				env("APP_DEBUG") == true
 			) {
-				const morgan = require("morgan");
-				this.app.use(morgan("tiny"));
+				pluginMorgan.run(
+					this.app,
+					path.join(this.gembootConfigPath, "logging")
+				);
 				this.startupDebug("Morgan Enabled.");
 			} else {
 				this.startupDebug("Morgan Disabled.");
