@@ -76,7 +76,11 @@ class CrudRepository extends Repository {
 			}
 			return row.save();
 		} else {
-			return this.query.findOneAndUpdate({ [this.PK]: id }, data).exec();
+			// query first
+			// return this.query.findOneAndUpdate({ [this.PK]: id }, data).exec();
+
+			// update first
+			return this.query.update({ [this.PK]: id }, data);
 		}
 	}
 
@@ -89,10 +93,14 @@ class CrudRepository extends Repository {
 				}
 			});
 		} else {
-			return this.query
-				.findById(id)
-				.remove()
-				.exec();
+			// query first
+			// return this.query
+			// 	.findById(id)
+			// 	.remove()
+			// 	.exec();
+
+			// delete first
+			return this.query.deleteOne({ [this.PK]: id });
 		}
 	}
 }
