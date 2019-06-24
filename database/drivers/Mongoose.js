@@ -7,7 +7,8 @@ const connect = config => {
 		return mongoose.connection;
 	}
 
-	let URI = "mongodb://" + config.host + "/" + config.database;
+	let URI =
+		"mongodb://" + config.host + ":" + config.port + "/" + config.database;
 	if (config.username && config.password) {
 		URI =
 			"mongodb://" +
