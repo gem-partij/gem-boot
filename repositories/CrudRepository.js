@@ -28,6 +28,8 @@ class CrudRepository extends Repository {
 		if (!pageSize) {
 			pageSize = 30;
 		}
+		pageNumber = parseInt(pageNumber);
+		pageSize = parseInt(pageSize);
 
 		if (this.isRelational) {
 			if (!options) {
