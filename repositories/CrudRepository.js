@@ -21,21 +21,29 @@ class CrudRepository extends Repository {
 		}
 	}
 
-	getAll(options = null) {
+	getAll(options = null, pageNumber = null, pageSize = null) {
+		if (!pageNumber) {
+			pageNumber = 1;
+		}
+		if (!pageSize) {
+			pageSize = 30;
+		}
+
 		if (this.isRelational) {
-			if (options === null) {
+			if (!options) {
 				options = {
-					limit: 30,
-					offset: 0,
+					limit: pageSize,
+					offset: (pageNumber - 1) * pageSize,
 					order: [[this.PK, "DESC"]],
 					attributes: this.model.unprotectedAttributes
 				};
 			}
 			return this.query.findAll(options);
 		} else {
-			if (options === null) {
+			if (!options) {
 				options = {
-					limit: 30,
+					skip: (pageNumber - 1) * pageSize,
+					limit: pageSize,
 					sort: { [this.PK]: -1 }
 				};
 			}

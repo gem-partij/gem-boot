@@ -20,7 +20,7 @@ class CrudController extends Controller {
 	// GET /
 	index(req, res) {
 		this.repo
-			.getAll()
+			.getAll(null, req.query.pageNumber, req.query.pageSize)
 			.then(data => {
 				res.send(JSON.stringify(data));
 			})
