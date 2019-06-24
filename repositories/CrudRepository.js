@@ -80,7 +80,7 @@ class CrudRepository extends Repository {
 			// return this.query.findOneAndUpdate({ [this.PK]: id }, data).exec();
 
 			// update first
-			return this.query.update({ [this.PK]: id }, data);
+			return this.query.updateOne({ [this.PK]: id }, data);
 		}
 	}
 

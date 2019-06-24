@@ -3,28 +3,44 @@ const dbUtil = require("../utils/database");
 const ConnectionManager = dbUtil.getConnectionManager();
 
 class Model {
-	init() {
-		this._connectionManager = new ConnectionManager(
+	init(connectionName = null, tableName = null, attributes = {}) {
+		// set connection manager
+		this.connectionManager = new ConnectionManager(
 			process.env.GEMBOOT_CONFIG_PATH
 				? require(process.env.GEMBOOT_CONFIG_PATH + "/database")
 				: null
 		);
-		this._connectionName = this.connectionManager.defaultConnectionName;
+
+		// set connection name
+		if (connectionName) {
+			this.connectionName = connectionName;
+		} else {
+			this.connectionName = this.connectionManager.defaultConnectionName;
+		}
+
+		// set connection
 		this._connection = null;
 
-		this._table = "tablename";
+		// set table name
+		if (tableName) {
+			this.table = tableName;
+		} else {
+			this.table = "tablename";
+		}
 
-		this._primaryKey = !this.isRelational ? "_id" : "id";
+		// set primary key
+		this.primaryKey = this.isRelational ? "id" : "_id";
 
-		this._attributes = {};
+		// set attributes
+		this.attributes = attributes;
 
 		this._protected = ["created_at", "updated_at"];
 
 		this._unprotected = this.generateUnprotectedAttributes();
 	}
 
-	constructor() {
-		this.init();
+	constructor(connectionName = null, tableName = null, attributes = {}) {
+		this.init(connectionName, tableName, attributes);
 	}
 
 	set table(table) {
