@@ -24,7 +24,7 @@ const run = (app, configPath) => {
 	});
 	const errorLogStream = rfs("error.log", {
 		interval: "1d", // rotate daily
-		path: logErrorDirectory,
+		path: logAccessDirectory,
 		maxFiles: config.days
 	});
 

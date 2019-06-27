@@ -1,6 +1,7 @@
 const env = require("./env");
 const path = require("path");
 const pluginMorgan = require("../plugins/morgan");
+const errorHandler = require("./errorHandler");
 
 class ApplicationStarter {
 	init() {
@@ -77,6 +78,9 @@ class ApplicationStarter {
 
 		this.app.use(this.router);
 		this.startupDebug("Router Registered.");
+
+		// register error handler
+		errorHandler.register(this.app);
 
 		this.startupDebug("APP_ENV: " + env("APP_ENV"));
 		const port = env("APP_PORT");
