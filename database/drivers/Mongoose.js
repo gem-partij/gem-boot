@@ -27,21 +27,53 @@ const connect = config => {
 	return connectURI(URI);
 };
 
+const errHandler = err => {
+	console.error("Unable to connect to mongo:", err);
+	throw err;
+};
+
 const connectURI = URI => {
-	const conn = mongoose.createConnection(URI, {
-		useNewUrlParser: true
+	// const conn = mongoose
+	// 	.createConnection(URI, {
+	// 		useNewUrlParser: true
+	// 	})
+	// 	.catch(errHandler);
+
+	// conn.on("error", errHandler);
+	// conn.once("open", () => {
+	// 	debug("Connection to DB[mongodb] has been established successfully.");
+	// });
+
+	mongoose.connection.once("open", function() {
+		debug("MongoDB event open");
+		debug("MongoDB connected [%s]", url);
+
+		mongoose.connection.on("connected", function() {
+			debug("MongoDB event connected");
+		});
+
+		mongoose.connection.on("disconnected", function() {
+			debug("MongoDB event disconnected");
+		});
+
+		mongoose.connection.on("reconnected", function() {
+			debug("MongoDB event reconnected");
+		});
+
+		mongoose.connection.on("error", function(err) {
+			debug("MongoDB event error: " + err);
+		});
+
+		return resolve();
 	});
 
-	conn.on("error", console.error.bind(console, "connection error:"));
-	conn.once("open", () => {
-		debug(
-			"Connection to DB[" +
-				env("DB_CONNECTION") +
-				"] has been established successfully."
-		);
-	});
-
-	return conn;
+	return mongoose.connect(
+		URI,
+		{
+			useNewUrlParser: true
+		},
+		errHandler
+	);
 };
 
 const vendor = () => {

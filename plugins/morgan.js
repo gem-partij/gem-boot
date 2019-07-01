@@ -10,11 +10,9 @@ const run = (app, configPath) => {
 	const logDirectory = gembootLogPath;
 
 	const logAccessDirectory = path.join(logDirectory, "access");
-	const logErrorDirectory = path.join(logDirectory, "error");
 
 	// ensure log directory exists
 	fs.existsSync(logAccessDirectory) || fs.mkdirSync(logAccessDirectory);
-	fs.existsSync(logErrorDirectory) || fs.mkdirSync(logErrorDirectory);
 
 	// create a rotating write stream
 	const accessLogStream = rfs("access.log", {

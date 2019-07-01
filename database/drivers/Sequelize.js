@@ -14,14 +14,11 @@ const connect = config => {
 
 	conn.authenticate()
 		.then(() => {
-			debug(
-				"Connection to DB[" +
-					config.driver +
-					"] has been established successfully."
-			);
+			debug("Connection to DB[sql] has been established successfully.");
 		})
 		.catch(err => {
 			console.error("Unable to connect to the database:", err);
+			throw err;
 		});
 
 	return conn;

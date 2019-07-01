@@ -125,27 +125,35 @@ class Model {
 
 	// For SQL (MySQL, Postgre, etc)
 	ORM() {
-		const ORM = this.connection.define(this.table, this.attributes, {
-			createdAt: "created_at",
-			updatedAt: "updated_at",
-			deletedAt: false
-		});
-		return ORM;
+		try {
+			const ORM = this.connection.define(this.table, this.attributes, {
+				createdAt: "created_at",
+				updatedAt: "updated_at",
+				deletedAt: false
+			});
+			return ORM;
+		} catch (err) {
+			throw err;
+		}
 	}
 
 	// For NoSQL (MongoDB, etx)
 	ODM() {
-		const mongoose = require("mongoose");
-		const schema = new mongoose.Schema(this.attributes);
+		try {
+			const mongoose = require("mongoose");
+			const schema = new mongoose.Schema(this.attributes);
 
-		const modelExists = this.connection.modelNames().find(el => {
-			return el == this.table;
-		});
+			const modelExists = this.connection.modelNames().find(el => {
+				return el == this.table;
+			});
 
-		if (modelExists) {
-			return this.connection.model(this.table);
-		} else {
-			return this.connection.model(this.table, schema);
+			if (modelExists) {
+				return this.connection.model(this.table);
+			} else {
+				return this.connection.model(this.table, schema);
+			}
+		} catch (err) {
+			throw err;
 		}
 	}
 

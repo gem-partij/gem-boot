@@ -53,16 +53,26 @@ class ConnectionManager {
 	}
 
 	connect() {
-		this.connection = this.driver.connect(this.connectionConfig);
-		return this.connection;
+		try {
+			this.connection = this.driver.connect(this.connectionConfig);
+		} catch (err) {
+			throw err;
+		} finally {
+			return this.connection;
+		}
 	}
 
 	connectURI(URI = null) {
-		if (!URI) {
-			URI = this.connectionConfig.url;
+		try {
+			if (!URI) {
+				URI = this.connectionConfig.url;
+			}
+			this.connection = this.driver.connectURI(URI);
+		} catch (err) {
+			throw err;
+		} finally {
+			return this.connection;
 		}
-		this.connection = this.driver.connectURI(URI);
-		return this.connection;
 	}
 }
 

@@ -26,16 +26,14 @@ class ApplicationStarter {
 		if (this.gembootConfigPath) {
 			process.env.GEMBOOT_CONFIG_PATH = this.gembootConfigPath;
 		}
+		const logConfig = path.join(this.gembootConfigPath, "logging");
 
 		if (this.plugins.morgan.enable === true) {
 			if (
 				env("APP_ENV").toUpperCase() == "LOCAL" ||
 				env("APP_DEBUG") == true
 			) {
-				pluginMorgan.run(
-					this.app,
-					path.join(this.gembootConfigPath, "logging")
-				);
+				pluginMorgan.run(this.app, logConfig);
 				this.startupDebug("Morgan Enabled.");
 			} else {
 				this.startupDebug("Morgan Disabled.");
@@ -80,7 +78,7 @@ class ApplicationStarter {
 		this.startupDebug("Router Registered.");
 
 		// register error handler
-		errorHandler.register(this.app);
+		errorHandler.register(this.app, logConfig);
 
 		this.startupDebug("APP_ENV: " + env("APP_ENV"));
 		const port = env("APP_PORT");

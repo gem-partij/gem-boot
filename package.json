@@ -1,6 +1,6 @@
 {
 	"name": "gemboot",
-	"version": "1.2.8",
+	"version": "1.3.0",
 	"description": "Gem Boot JS Core",
 	"main": "index.js",
 	"scripts": {
@@ -28,11 +28,13 @@
 		"express-rate-limit": "^5.0.0",
 		"helmet": "^3.18.0",
 		"knex": "^0.16.5",
+		"moment-timezone": "^0.5.25",
 		"mongoose": "^5.6.0",
 		"morgan": "^1.9.1",
 		"mysql": "^2.17.1",
 		"mysql2": "^1.6.5",
 		"rotating-file-stream": "^1.4.1",
-		"sequelize": "^5.8.6"
+		"sequelize": "^5.8.6",
+		"winston": "^3.2.1"
 	}
 }
