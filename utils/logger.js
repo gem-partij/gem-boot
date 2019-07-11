@@ -1,5 +1,6 @@
 const path = require("path");
 const env = require("./env");
+const getDefault = require("./getDefault");
 const moment = require("moment-timezone");
 const { createLogger, format, transports } = require("winston");
 const { combine, timestamp, label, printf, prettyPrint } = format;
@@ -10,7 +11,19 @@ const myFormat = printf(info => {
 	return `${myTimestamp()} [${info.level}]: ${info.message}`;
 });
 
-const logger = ({ level, logPath }) => {
+const logger = (configOpt = null) => {
+	let level = null;
+	let logPath = null;
+
+	if (!configOpt) {
+		const defaultConfig = getDefault.loggerConfig();
+		level = defaultConfig.level;
+		logPath = defaultConfig.logPath;
+	} else {
+		level = configOpt.level;
+		logPath = configOpt.logPath;
+	}
+
 	const log = createLogger({
 		level: level,
 		format: myFormat,

@@ -1,5 +1,6 @@
 const env = require("./env");
 const path = require("path");
+const getDefault = require("./getDefault");
 const pluginMorgan = require("../plugins/morgan");
 const errorHandler = require("./errorHandler");
 
@@ -15,7 +16,7 @@ class ApplicationStarter {
 		this.plugins = plugins;
 
 		if (!gembootConfigPath) {
-			gembootConfigPath = path.join(process.cwd(), "config");
+			gembootConfigPath = getDefault.configPath();
 		}
 		this.gembootConfigPath = gembootConfigPath;
 

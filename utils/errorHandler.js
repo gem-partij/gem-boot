@@ -1,6 +1,5 @@
-const fs = require("fs");
-const path = require("path");
 const env = require("./env");
+const getDefault = require("./getDefault");
 
 const resSendError = (err, res) => {
 	const standardMessage = "Oops! Something went wrong!";
@@ -31,20 +30,7 @@ const errorHandler = (err, req, res, next) => {
 };
 
 const registerErrorHandler = (app, configPath) => {
-	const config = require(configPath);
-	const gembootLogPath = path.join(process.cwd(), config.path);
-
-	const logDirectory = gembootLogPath;
-
-	const logErrorDirectory = path.join(logDirectory, "error");
-
-	// ensure log directory exists
-	fs.existsSync(logErrorDirectory) || fs.mkdirSync(logErrorDirectory);
-
-	const logger = require("./logger")({
-		level: config.level,
-		logPath: logErrorDirectory
-	});
+	const logger = require("./logger")(getDefault.loggerConfig(configPath));
 
 	app.use((err, req, res, next) => {
 		logger.error(err.stack);

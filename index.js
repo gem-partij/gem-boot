@@ -18,6 +18,8 @@ module.exports = {
 	database: require("./utils/database"),
 	GBRouter: require("./utils/GBRouter"),
 	env: require("./utils/env"),
+	logger: require("./utils/logger"),
+	validator: require("./utils/validator"),
 
 	// config
 	knexfile: require("./knexfile")
