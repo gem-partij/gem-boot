@@ -52,9 +52,9 @@ class ConnectionManager {
 		return this._connection;
 	}
 
-	connect() {
+	resolveConnection(conn) {
 		try {
-			this.connection = this.driver.connect(this.connectionConfig);
+			this.connection = conn;
 		} catch (err) {
 			throw err;
 		} finally {
@@ -62,17 +62,17 @@ class ConnectionManager {
 		}
 	}
 
+	connect() {
+		return this.resolveConnection(
+			this.driver.connect(this.connectionConfig)
+		);
+	}
+
 	connectURI(URI = null) {
-		try {
-			if (!URI) {
-				URI = this.connectionConfig.url;
-			}
-			this.connection = this.driver.connectURI(URI);
-		} catch (err) {
-			throw err;
-		} finally {
-			return this.connection;
+		if (!URI) {
+			URI = this.connectionConfig.url;
 		}
+		return this.resolveConnection(this.driver.connectURI(URI));
 	}
 }
 

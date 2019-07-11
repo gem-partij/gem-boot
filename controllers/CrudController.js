@@ -1,4 +1,5 @@
 const Controller = require("./Controller");
+const logger = require("../utils/logger")();
 
 class CrudController extends Controller {
 	constructor(Repository = null) {
@@ -25,6 +26,8 @@ class CrudController extends Controller {
 				res.send(JSON.stringify(data));
 			})
 			.catch(err => {
+				logger.error(err);
+				logger.error(err.stack);
 				res.status(500).send(err.message);
 			});
 	}
@@ -38,6 +41,8 @@ class CrudController extends Controller {
 					res.send(JSON.stringify(data));
 				})
 				.catch(err => {
+					logger.error(err);
+					logger.error(err.stack);
 					res.status(500).send(err.message);
 				});
 		} else {
@@ -53,6 +58,8 @@ class CrudController extends Controller {
 				res.send(JSON.stringify(response));
 			})
 			.catch(err => {
+				logger.error(err);
+				logger.error(err.stack);
 				res.status(500).send(err.message);
 			});
 	}
@@ -66,6 +73,8 @@ class CrudController extends Controller {
 					res.send(JSON.stringify(response));
 				})
 				.catch(err => {
+					logger.error(err);
+					logger.error(err.stack);
 					res.status(500).send(err.message);
 				});
 		} else {
@@ -82,6 +91,8 @@ class CrudController extends Controller {
 					res.send(JSON.stringify(response));
 				})
 				.catch(err => {
+					logger.error(err);
+					logger.error(err.stack);
 					res.status(500).send(err.message);
 				});
 		} else {

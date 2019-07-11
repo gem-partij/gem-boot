@@ -33,47 +33,48 @@ const errHandler = err => {
 };
 
 const connectURI = URI => {
-	// const conn = mongoose
-	// 	.createConnection(URI, {
-	// 		useNewUrlParser: true
-	// 	})
-	// 	.catch(errHandler);
+	const conn = mongoose
+		.createConnection(URI, {
+			useNewUrlParser: true
+		})
+		.once("error", errHandler)
+		.once("open", () => {
+			debug(
+				"Connection to DB[mongodb] has been established successfully."
+			);
+		});
 
-	// conn.on("error", errHandler);
-	// conn.once("open", () => {
-	// 	debug("Connection to DB[mongodb] has been established successfully.");
+	// mongoose.connection.once("open", function() {
+	// 	debug("MongoDB event open");
+	// 	debug("MongoDB connected [%s]", url);
+
+	// 	mongoose.connection.on("connected", function() {
+	// 		debug("MongoDB event connected");
+	// 	});
+
+	// 	mongoose.connection.on("disconnected", function() {
+	// 		debug("MongoDB event disconnected");
+	// 	});
+
+	// 	mongoose.connection.on("reconnected", function() {
+	// 		debug("MongoDB event reconnected");
+	// 	});
+
+	// 	mongoose.connection.on("error", function(err) {
+	// 		debug("MongoDB event error: " + err);
+	// 	});
+
+	// 	return resolve();
 	// });
 
-	mongoose.connection.once("open", function() {
-		debug("MongoDB event open");
-		debug("MongoDB connected [%s]", url);
-
-		mongoose.connection.on("connected", function() {
-			debug("MongoDB event connected");
-		});
-
-		mongoose.connection.on("disconnected", function() {
-			debug("MongoDB event disconnected");
-		});
-
-		mongoose.connection.on("reconnected", function() {
-			debug("MongoDB event reconnected");
-		});
-
-		mongoose.connection.on("error", function(err) {
-			debug("MongoDB event error: " + err);
-		});
-
-		return resolve();
-	});
-
-	return mongoose.connect(
-		URI,
-		{
-			useNewUrlParser: true
-		},
-		errHandler
-	);
+	// const conn = mongoose.connect(
+	// 	URI,
+	// 	{
+	// 		useNewUrlParser: true
+	// 	},
+	// 	errHandler
+	// );
+	return conn;
 };
 
 const vendor = () => {

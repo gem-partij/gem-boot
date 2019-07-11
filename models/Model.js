@@ -143,7 +143,8 @@ class Model {
 			const mongoose = require("mongoose");
 			const schema = new mongoose.Schema(this.attributes);
 
-			const modelExists = this.connection.modelNames().find(el => {
+			const conn = this.connection;
+			const modelExists = conn.modelNames().find(el => {
 				return el == this.table;
 			});
 
